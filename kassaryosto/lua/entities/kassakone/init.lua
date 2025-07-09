@@ -65,9 +65,7 @@ function ENT:StartRobbery(ply)
 
     self:SetStatus(1)
     self:SetNextAction(CurTime() + (KASSA_CONFIG.RobberyTime))
-    self:EmitSound("siren.wav")
     DarkRP.notify(ply, 0, 3, 'Ryöstät kassakonetta!')
-    ply:wanted(nil, 'Kassakoneen ryöstö', 1800)
     local robberyPly = ply
     local robberyEnt = self
     local robberyTimerID = "robbery_distance_" .. self:EntIndex()
@@ -184,6 +182,14 @@ if SERVER then
             if ent.lockpickFinished then
                 ent:lockpickFinished(ply, true)
             end
+        end
+    end)
+    hook.Add("lockpickStarted", "KassaLockpickWanted", function(ply, ent)
+        if IsValid(ent) and ent:GetClass() == "kassakone" then
+            if not ply:isWanted() then
+                ply:wanted(nil, "Kassakoneen ryöstö!", 1800)
+            end
+            ent:EmitSound("siren.wav")
         end
     end)
 end
