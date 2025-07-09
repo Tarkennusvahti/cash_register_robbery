@@ -14,4 +14,6 @@ Following commands can be used as superadmin or from console:
     - Map specific
 
 It's not perfect and will probably never be. Do whatever you wish with it. 
+Steam workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=3521013573
+
 Also all the prints and texts ingame are in Finnish, have fun translating. Might change this later if people actually like this and use it.
