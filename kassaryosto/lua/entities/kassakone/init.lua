@@ -200,7 +200,34 @@ if SERVER then
             if not ply:isWanted() then
                 ply:wanted(nil, "Kassakoneen ryöstö!", 1800)
             end
-            ent:EmitSound("siren.wav")
+            if KASSA_CONFIG.LoopSiren then
+                local timerName = "kassa_siren_loop_" .. ent:EntIndex()
+                timer.Create(timerName, SoundDuration("kassakone/siren.wav"), 0, function()
+                    if not IsValid(ent) or ent:GetStatus() ~= 0 then timer.Remove(timerName) return end
+                    ent:EmitSound("kassakone/siren.wav", 75, 100, 1, CHAN_AUTO, 0, 60)
+                end)
+                ent:EmitSound("kassakone/siren.wav", 75, 100, 1, CHAN_AUTO, 0, 60)
+                ent.SirenTimer = timerName
+            else
+                ent:EmitSound("kassakone/siren.wav", 75, 100, 1, CHAN_AUTO, 0, 60)
+            end
+        end
+    end)
+    hook.Add("onLockpickCompleted", "KassaLockpickSirenStop", function(ply, success, ent)
+        if IsValid(ent) and ent:GetClass() == "kassakone" then
+            if ent.SirenTimer then
+                if ent.SirenStopTimer then return end
+                local stopTimerName = "kassa_siren_stop_" .. ent:EntIndex()
+                timer.Create(stopTimerName, 35, 1, function()
+                    if ent.SirenTimer then
+                        timer.Remove(ent.SirenTimer)
+                        ent.SirenTimer = nil
+                    end
+                    ent:StopSound("kassakone/siren.wav")
+                    ent.SirenStopTimer = nil
+                end)
+                ent.SirenStopTimer = stopTimerName
+            end
         end
     end)
 end

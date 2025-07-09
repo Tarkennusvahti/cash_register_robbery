@@ -1,8 +1,8 @@
 ENT.Type = 'anim'
 ENT.Base = 'base_gmodentity'
 ENT.PrintName = 'Kassakone'
-ENT.Author = 'Kukkiskakkis'
-ENT.Category = 'Kukkiskakkis'
+ENT.Author = 'Negative'
+ENT.Category = 'Negative'
 ENT.Spawnable = true
 ENT.AdminSpawnable = true
 
