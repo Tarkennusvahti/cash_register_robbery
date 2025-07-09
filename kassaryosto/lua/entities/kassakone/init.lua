@@ -66,7 +66,6 @@ function ENT:Use(ply)
         DarkRP.notify(ply, 1, 3, 'Kassakonetta ryöstetään jo!')
         return end
 
-    -- Jos ryöstö alkaa, poista autolukitusajastin
     if self.AutoLockTimer then timer.Remove(self.AutoLockTimer) self.AutoLockTimer = nil end
     self:StartRobbery(ply)
 end
