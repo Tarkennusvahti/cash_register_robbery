@@ -12,3 +12,6 @@ Following commands can be used as superadmin or from console:
   kassakone_wipe
     - Deletes all cash registers currently in the map
     - Map specific
+
+It's not perfect and will probably never be. Do whatever you wish with it. 
+Also all the prints and texts ingame are in Finnish, have fun translating. Might change this later if people actually like this and use it.
