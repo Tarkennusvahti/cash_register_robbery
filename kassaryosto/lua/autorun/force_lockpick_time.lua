@@ -1,3 +1,3 @@
 hook.Add("lockpickTime", "ForceLockpickTime", function(ply, ent)
-    return 1
+    return KASSA_CONFIG.LockpickTime
 end)
