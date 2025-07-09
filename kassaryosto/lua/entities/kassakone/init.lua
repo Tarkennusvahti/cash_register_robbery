@@ -202,9 +202,28 @@ if SERVER then
             end
             if KASSA_CONFIG.LoopSiren then
                 local timerName = "kassa_siren_loop_" .. ent:EntIndex()
-                timer.Create(timerName, SoundDuration("kassakone/siren.wav"), 0, function()
-                    if not IsValid(ent) or ent:GetStatus() ~= 0 then timer.Remove(timerName) return end
-                    ent:EmitSound("kassakone/siren.wav", 75, 100, 1, CHAN_AUTO, 0, 60)
+                timer.Create(timerName, 8, 0, function() -- Modify '8' to the length of your siren.wav file in seconds.
+                    if not IsValid(ent) then timer.Remove(timerName) return end
+                    
+                    if ent.LockpickCompleted then
+                        if ent.SirenLoopsLeft and ent.SirenLoopsLeft > 0 then
+                            ent:EmitSound("kassakone/siren.wav", 75, 100, 1, CHAN_AUTO, 0, 60)
+                            ent.SirenLoopsLeft = ent.SirenLoopsLeft - 1
+                        else
+                            timer.Remove(timerName)
+                            ent:StopSound("kassakone/siren.wav")
+                            ent.SirenTimer = nil
+                            ent.LockpickCompleted = nil
+                            ent.SirenLoopsLeft = nil
+                        end
+                    else
+                        if ent:GetStatus() ~= 0 then 
+                            timer.Remove(timerName) 
+                            ent.SirenTimer = nil
+                            return 
+                        end
+                        ent:EmitSound("kassakone/siren.wav", 75, 100, 1, CHAN_AUTO, 0, 60)
+                    end
                 end)
                 ent:EmitSound("kassakone/siren.wav", 75, 100, 1, CHAN_AUTO, 0, 60)
                 ent.SirenTimer = timerName
@@ -217,16 +236,8 @@ if SERVER then
         if IsValid(ent) and ent:GetClass() == "kassakone" then
             if ent.SirenTimer then
                 if ent.SirenStopTimer then return end
-                local stopTimerName = "kassa_siren_stop_" .. ent:EntIndex()
-                timer.Create(stopTimerName, 35, 1, function()
-                    if ent.SirenTimer then
-                        timer.Remove(ent.SirenTimer)
-                        ent.SirenTimer = nil
-                    end
-                    ent:StopSound("kassakone/siren.wav")
-                    ent.SirenStopTimer = nil
-                end)
-                ent.SirenStopTimer = stopTimerName
+                ent.SirenLoopsLeft = 4
+                ent.LockpickCompleted = true
             end
         end
     end)
