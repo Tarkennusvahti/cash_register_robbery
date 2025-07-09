@@ -5,6 +5,7 @@ KASSA_CONFIG.MaxReward = 7000 -- Maksimi rahamäärä kassakoneessa
 KASSA_CONFIG.LoopSiren = true -- Should the siren sound loop?
 KASSA_CONFIG.CooldownTime = 1800 -- Ryöstön jälkeinen cooldown. 1800 seconds = 30 minutes
 KASSA_CONFIG.RobberyTime = 30 -- Röstöön menevä aika. 30 seconds normaalisti
+KASSA_CONFIG.LockpickTime = 30 -- aika lukon avaamiseen. 30 seconds normaalisti
 KASSA_CONFIG.Robbers = nil -- Kaikki voivat ryöstää jos tämä on nil
 KASSA_CONFIG.RobberyDistance = 150 -- Max distance (units) kassarekisteristä
 KASSA_CONFIG.Police = { -- The teams considered cops by the bank.
