@@ -37,6 +37,16 @@ function ENT:lockpickFinished(ply, success)
     if self.DoorOpened then return end
     self.DoorOpened = true
     DarkRP.notify(ply, 0, 3, 'Kassakone avattu! Paina E ryöstääksesi.')
+
+    if self.AutoLockTimer then timer.Remove(self.AutoLockTimer) end
+    self.AutoLockTimer = "kassa_autolock_" .. self:EntIndex()
+    timer.Create(self.AutoLockTimer, 10, 1, function()
+        if not IsValid(self) then return end
+        if self.DoorOpened and self:GetStatus() == 0 and not self.playerRobber then
+            self.DoorOpened = false
+            DarkRP.notify(ply, 1, 3, 'Olit liian hidas! Kassakone lukittui.')
+        end
+    end)
 end
 
 function ENT:Use(ply)
@@ -56,6 +66,8 @@ function ENT:Use(ply)
         DarkRP.notify(ply, 1, 3, 'Kassakonetta ryöstetään jo!')
         return end
 
+    -- Jos ryöstö alkaa, poista autolukitusajastin
+    if self.AutoLockTimer then timer.Remove(self.AutoLockTimer) self.AutoLockTimer = nil end
     self:StartRobbery(ply)
 end
 
