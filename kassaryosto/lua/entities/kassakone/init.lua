@@ -68,6 +68,7 @@ function ENT:Use(ply)
 
     if self.AutoLockTimer then timer.Remove(self.AutoLockTimer) self.AutoLockTimer = nil end
     self:StartRobbery(ply)
+    self:EmitSound("kassakone/cash.wav", 75, 100, 1, CHAN_AUTO, 0, 60)
 end
 
 function ENT:StartRobbery(ply)

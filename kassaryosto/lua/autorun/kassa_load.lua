@@ -3,6 +3,7 @@ if SERVER then
     include('kassa_config.lua')
     resource.AddFile('resource/fonts/coolvetica-rg.ttf')
 	resource.AddFile('sound/kassakone/siren.wav')
+    resource.AddFile('sound/kassakone/cash.wav')
 else
     include('kassa_config.lua')
 end
