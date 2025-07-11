@@ -18,7 +18,7 @@ local function teamsCount(policeTable)
 end
 
 function ENT:Initialize()
-    self:SetModel('models/sickness/cashregister_pos.mdl')
+    self:SetModel('models/props_c17/cashregister01a.mdl')
     self:SetSolid(SOLID_VPHYSICS)
     self:SetMoveType(SOLID_VPHYSICS)
     self:PhysicsInit(SOLID_VPHYSICS)
