@@ -1,9 +1,13 @@
+
 AddCSLuaFile('shared.lua')
 AddCSLuaFile('cl_init.lua')
 include('shared.lua')
+if not KASSA_LANG then
+    include("kassa_lang.lua")
+end
 
 local function isAllowed(ply)
-	return KASSA_CONFIG.Robbers[team.GetName(ply:Team())]
+    return KASSA_CONFIG.Robbers[team.GetName(ply:Team())]
 end
 
 local function teamsCount(policeTable)
@@ -14,7 +18,7 @@ local function teamsCount(policeTable)
             count = count + 1
         end
     end
-    return count >= (KASSA_CONFIG.MinPolice or 0)
+    return count >= KASSA_CONFIG.MinPolice
 end
 
 function ENT:Initialize()
@@ -36,7 +40,7 @@ function ENT:lockpickFinished(ply, success)
     if not success then return end
     if self.DoorOpened then return end
     self.DoorOpened = true
-    DarkRP.notify(ply, 0, 3, 'Kassakone avattu! Paina E ryöstääksesi.')
+    DarkRP.notify(ply, 0, 3, KASSA_LANG.Get("register_opened"))
 
     if self.AutoLockTimer then timer.Remove(self.AutoLockTimer) end
     self.AutoLockTimer = "kassa_autolock_" .. self:EntIndex()
@@ -44,7 +48,7 @@ function ENT:lockpickFinished(ply, success)
         if not IsValid(self) then return end
         if self.DoorOpened and self:GetStatus() == 0 and not self.playerRobber then
             self.DoorOpened = false
-            DarkRP.notify(ply, 1, 3, 'Olit liian hidas! Kassakone lukittui.')
+            DarkRP.notify(ply, 1, 3, KASSA_LANG.Get("too_slow_locked"))
         end
     end)
 end
@@ -53,17 +57,17 @@ function ENT:Use(ply)
     local enoughPolice = teamsCount(KASSA_CONFIG.Police)
 
     if not self.DoorOpened then
-        DarkRP.notify(ply, 1, 3, 'Kassakone ei ole auki! Avaa se ensin lockpickillä.')
+        DarkRP.notify(ply, 1, 3, KASSA_LANG.Get("not_opened"))
         return end
     if self:GetStatus() ~= 0 then return end
     if not isAllowed(ply) then 
-        DarkRP.notify(ply, 1, 3, 'Et voi ryöstää kassakonetta ollessasi '..team.GetName(ply:Team())..'!')
+        DarkRP.notify(ply, 1, 3, string.format(KASSA_LANG.Get("not_robber"), team.GetName(ply:Team())))
         return end
     if not enoughPolice then
-        DarkRP.notify(ply, 1, 3, 'Ei tarpeeksi poliiseja paikalla ryöstöön!')
+        DarkRP.notify(ply, 1, 3, KASSA_LANG.Get("no_police"))
         return end
     if self.playerRobber then
-        DarkRP.notify(ply, 1, 3, 'Kassakonetta ryöstetään jo!')
+        DarkRP.notify(ply, 1, 3, KASSA_LANG.Get("already_robbed"))
         return end
 
     if self.AutoLockTimer then timer.Remove(self.AutoLockTimer) self.AutoLockTimer = nil end
@@ -77,7 +81,7 @@ function ENT:StartRobbery(ply)
 
     self:SetStatus(1)
     self:SetNextAction(CurTime() + (KASSA_CONFIG.RobberyTime))
-    DarkRP.notify(ply, 0, 3, 'Ryöstät kassakonetta!')
+    DarkRP.notify(ply, 0, 3, KASSA_LANG.Get("robbery_started"))
     local robberyPly = ply
     local robberyEnt = self
     local robberyTimerID = "robbery_distance_" .. self:EntIndex()
@@ -90,7 +94,7 @@ function ENT:StartRobbery(ply)
             return
         end
         if robberyPly:GetPos():DistToSqr(robberyEnt:GetPos()) > maxDist*maxDist then
-            DarkRP.notify(robberyPly, 1, 4, 'Menit liian kauas kassakoneesta! Ryöstö peruttu.')
+            DarkRP.notify(robberyPly, 1, 4, KASSA_LANG.Get("too_far"))
             robberyEnt:SetStatus(0)
             robberyEnt:SetNextAction(CurTime())
             robberyEnt.DoorOpened = false
@@ -104,7 +108,7 @@ function ENT:StartRobbery(ply)
         self:SetStatus(2)
         self:SetNextAction(CurTime() + KASSA_CONFIG.CooldownTime)
         ply:addMoney(self:GetReward())
-        DarkRP.notify(ply, 0, 5, 'Ryöstit '..DarkRP.formatMoney(self:GetReward())..' kassakoneesta!')
+        DarkRP.notify(ply, 0, 5, string.format(KASSA_LANG.Get("reward"), DarkRP.formatMoney(self:GetReward())))
         self.DoorOpened = false
         self:SetReward(0)
         self.playerRobber = nil
@@ -155,12 +159,12 @@ concommand.Add('kassakone_save', function(ply)
             end
             file.Write('kassakone/'..game.GetMap()..'.txt', util.TableToJSON(data))
             if IsValid(ply) then
-                DarkRP.notify(ply, 0, 10, 'Tallennettu '..#found..' kassakonetta.')
+                DarkRP.notify(ply, 0, 10, string.format(KASSA_LANG.Get("saved"), #found))
             end
-            MsgC(Color(0, 255, 0), '[Kassakone] ', Color(255, 255, 0), 'Tallennettu '..#found..' kassakonetta kartalle '..game.GetMap()..'.\n')
+            MsgC(Color(0, 255, 0), '[Kassakone] ', Color(255, 255, 0), string.format(KASSA_LANG.Get("saved_console"), #found, game.GetMap())..'\n')
         else
             if IsValid(ply) then
-                DarkRP.notify(ply, 1, 5, 'Kassakoneita ei löytynyt.')
+                DarkRP.notify(ply, 1, 5, KASSA_LANG.Get("not_found"))
             end
         end
     end
@@ -172,12 +176,12 @@ concommand.Add('kassakone_wipe', function(ply)
         if read then
             file.Delete('kassakone/'..game.GetMap()..'.txt')
             if IsValid(ply) then
-                DarkRP.notify(ply, 0, 10, 'Tallennettu data poistettu.')
+                DarkRP.notify(ply, 0, 10, KASSA_LANG.Get("data_deleted"))
             end
-            MsgC(Color(0, 255, 0), '[Kassakone] ', Color(255, 255, 0), 'Tallennettu data kartalle '..game.GetMap()..' poistettu!\n')
+            MsgC(Color(0, 255, 0), '[Kassakone] ', Color(255, 255, 0), KASSA_LANG.Get("data_deleted_console")..'\n')
         else
             if IsValid(ply) then
-                DarkRP.notify(ply, 1, 5, 'Tallennettua dataa ei löytynyt kartalle '..game.GetMap()..'!')
+                DarkRP.notify(ply, 1, 5, KASSA_LANG.Get("data_not_found_console"))
             end
         end
     end
@@ -199,7 +203,7 @@ if SERVER then
     hook.Add("lockpickStarted", "KassaLockpickWanted", function(ply, ent)
         if IsValid(ent) and ent:GetClass() == "kassakone" then
             if not ply:isWanted() then
-                ply:wanted(nil, "Kassakoneen ryöstö!", 1800)
+                ply:wanted(nil, KASSA_LANG.Get("wanted"), 1800)
             end
             if KASSA_CONFIG.LoopSiren then
                 local timerName = "kassa_siren_loop_" .. ent:EntIndex()
