@@ -46,6 +46,28 @@ KASSA_LANG["EN"] = {
     wanted = "Cash register robbery!"
 }
 
+KASSA_LANG["ES"] = {
+    register_name = "Caja registradora",
+    register_opened = "Registradora abierta! Apreta E para robar.",
+    too_slow_locked = "Muy lento! Registradora cerrada.",
+    not_opened = "Cerrada! Ganzuala primero.",
+    not_robber = "No puedes robar esto como %s!",
+    no_police = "No hay suficientes policias para un robo!",
+    already_robbed = "La registradora ya esta siendo robada!",
+    robbery_started = "Estas robando la registradora!",
+    too_far = "Te alejaste mucho de la registradora! Robo cancelado.",
+    reward = "Robaste %s de la registradora!",
+    saved = "%d registradoras guardadas.",
+    saved_console = "%d registradoras cargadas en %s.",
+    not_found = "No se han encontrado registradoras.",
+    data_deleted = "Los datos guardados han sido borrados.",
+    data_deleted_console = "Datos guardados borrados para este mapa!",
+    data_not_found_console = "No se han encontrado datos para este mapa!",
+    being_robbed = "La registradora esta siendo robada!",
+    just_robbed = "Recien robada!",
+    wanted = "Robar una caja registradora!"
+}
+
 function KASSA_LANG.Get(key)
     local lang = KASSA_CONFIG.language
     if KASSA_LANG[lang] and KASSA_LANG[lang][key] then
