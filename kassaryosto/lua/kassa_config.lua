@@ -1,5 +1,5 @@
 KASSA_CONFIG = {} 
-KASSA_CONFIG.language = "EN" -- Current options: "FI" or "EN"
+KASSA_CONFIG.language = "EN" -- Current options: "FI" "EN" "ES"
 KASSA_CONFIG.MinPolice = 0 -- Minimum number of teams considered cops by the register needed to start a robbery. (0 to disable)
 KASSA_CONFIG.BaseReward = 2000 -- Minimum amount of money in the register when it is created.
 KASSA_CONFIG.MaxReward = 7000 -- Maximum amount of money in the register when it is created.
