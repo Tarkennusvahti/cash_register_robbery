@@ -16,4 +16,7 @@ Following commands can be used as superadmin or from console:
 It's not perfect and will probably never be. Do whatever you wish with it. 
 Steam workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=3521013573
 
-Currently supports two languages: English and Finnish.
+Currently supports three languages: 
+English
+Finnish
+Spanish (Credits: Deix)
